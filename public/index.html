@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streaming Vidéo</title>
+    <link rel="stylesheet" href="style.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+	<div class="container">
+	    <!-- Lecteur vidéo fixe -->
+	    <div id="video-player-container">
+	        <video id="video-player" controls preload="auto">
+	            <source src="" type="video/mp4">
+	            Votre navigateur ne supporte pas le lecteur vidéo.
+	        </video>
+	    </div>
+
+	    <!-- Liste des fichiers avec scrolling -->
+	    <div id="file-browser">
+		<span id="back-button" style="display: none; cursor: pointer;">
+		    <i class="fas fa-arrow-circle-left"></i> Remonter
+		</span>
+	        <ul id="file-list"></ul>
+	    </div>
+	</div>
+	<div id="auth-modal" style="display: none;">
+	    <form id="auth-form">
+	        <div class="auth-header">
+	            <img src="https://picsum.photos/seed/login/100" alt="Login Illustration" class="auth-image">
+	            <h2>Connexion</h2>
+	        </div>
+	        <div class="auth-body">
+			<div class="input-group">
+			    <i class="fas fa-user"></i>
+			    <input type="text" id="username" name="username" placeholder="Entrez votre nom" required>
+			</div>
+			<div class="input-group">
+			    <i class="fas fa-lock"></i>
+			    <input type="password" id="password" name="password" placeholder="Entrez votre mot de passe" required>
+			</div>
+	        </div>
+	        <div class="auth-footer">
+	            <button type="submit">Se connecter</button>
+	        </div>
+	    </form>
+	</div>
+    <script src="script.js"></script>
+</body>
+</html>

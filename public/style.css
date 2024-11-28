@@ -1,0 +1,309 @@
+/* Styles de base */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Cache le débordement horizontal */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: white; /* Texte en blanc pour contraster avec le fond */
+    background-image: url('https://picsum.photos/1920/1080?random=1');
+    background-size: cover; /* Couvre tout l'écran */
+    background-position: center; /* Centrer l'image */
+    background-attachment: fixed; /* Reste fixe en défilant */
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7); /* Fond noir semi-transparent */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+#video-player-container {
+    flex: 0 0 auto;
+    padding: 10px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1); /* Fond semi-transparent */
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+#video-player {
+    width: 100%;
+    max-height: 300px;
+    border-radius: 10px;
+    background: black;
+}
+
+/* Liste scrollable */
+#video-player-container {
+    flex: 0 0 auto;
+    padding: 10px;
+    background: #333;
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#video-player {
+    width: 100%;
+    max-height: 300px;
+    border-radius: 10px; /* Coins arrondis */
+    background: #000;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); /* Ombre pour un effet "flottant" */
+}
+
+/* Icône générique */
+.icon {
+    margin-right: 10px;
+}
+
+#back-button {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #007bff;
+    display: inline-block;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+#back-button:hover {
+    color: #0056b3;
+}
+
+/* Style pour la fenêtre modale */
+#auth-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Style du formulaire */
+#auth-form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 90%; /* Ajuste pour les petits écrans */
+    max-width: 300px; /* Largeur maximale sur les grands écrans */
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+    box-sizing: border-box; /* Inclure le padding et les bordures dans la largeur */
+}
+
+/* Animation du formulaire */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* En-tête du formulaire */
+.auth-header {
+    margin-bottom: 20px;
+}
+
+.auth-header h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+    color: #333;
+    margin-top: 10px;
+}
+
+.auth-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+/* Corps du formulaire */
+.auth-body label {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+    display: block;
+    text-align: left;
+}
+
+.auth-body input {
+    width: calc(100% - 20px); /* Réduire la largeur pour prendre en compte le padding */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box; /* Inclure le padding et les bordures dans la largeur */
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #fff;
+}
+
+.input-group i {
+    color: #666;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.input-group input {
+    border: none;
+    outline: none;
+    flex: 1;
+}
+
+/* Bouton de connexion */
+.auth-footer button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.auth-footer button:hover {
+    background-color: #0056b3;
+}
+
+/* Liste des fichiers */
+#file-browser {
+    flex: 1 1 auto;
+    overflow-y: auto; /* Permet seulement le défilement vertical */
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.01);
+    border-radius: 10px;
+    margin: 0 auto; /* Centre le conteneur horizontalement */
+    max-width: 100%; /* Empêche le débordement horizontal */
+    box-sizing: border-box; /* Inclut le padding dans la largeur totale */
+}
+
+#file-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#file-list li {
+    padding: 10px 20px;
+    margin: 5px 0;
+    border-radius: 20px;
+    cursor: pointer;
+    background-color: rgba(108, 122, 137, 0.8);
+    color: white;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    max-width: calc(100% - 20px); /* Empêche les débordements horizontaux */
+    word-wrap: break-word; /* Coupe le texte trop long */
+}
+
+#file-list li:hover {
+    background-color: rgba(149, 165, 166, 0.8);
+    transform: scale(1.03);
+}
+
+#file-list li.playing {
+    background-color: rgba(189, 195, 199, 0.9);
+    color: black;
+    font-style: italic;
+}
+
+/* Style de la barre de défilement verticale */
+#file-browser::-webkit-scrollbar {
+    width: 12px; /* Largeur de la barre de défilement */
+    background-color: rgba(255, 255, 255, 0.1); /* Couleur de fond */
+}
+
+/* Style de la "piste" de la barre de défilement */
+#file-browser::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2); /* Couleur de la piste */
+    border-radius: 10px; /* Coins arrondis */
+}
+
+/* Style du "curseur" de la barre de défilement */
+#file-browser::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #ff7e5f, #feb47b); /* Couleur en dégradé */
+    border-radius: 10px; /* Coins arrondis */
+    border: 2px solid rgba(0, 0, 0, 0.2); /* Bordure pour effet 3D */
+}
+
+/* Style au survol */
+#file-browser::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #feb47b, #ff7e5f); /* Inversion du dégradé */
+    border: 2px solid rgba(0, 0, 0, 0.3); /* Renforcement de la bordure */
+}
+
+@media (max-width: 400px) {
+    #auth-form {
+        width: 100%; /* Utiliser toute la largeur disponible */
+        max-width: 90%; /* Garder un peu de marge */
+    }
+
+    .auth-body input {
+        font-size: 12px; /* Réduire la taille du texte pour les petits écrans */
+    }
+
+    .auth-footer button {
+        font-size: 14px; /* Réduire la taille du bouton sur petits écrans */
+    }
+}
+
+@media (max-width: 600px) {
+    #video-player {
+        max-height: 200px; /* Réduit la hauteur de la vidéo sur petits écrans */
+    }
+
+    #file-list li {
+        font-size: 14px; /* Réduit la taille du texte dans la liste */
+    }
+
+    #back-button {
+        font-size: 16px;
+    }
+}
+
+/* Icônes pour les éléments de la liste */
+.folder {
+    color: #ffb347; /* Jaune pour les dossiers */
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.video {
+    color: #7ed6df; /* Bleu pour les vidéos */
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.icon {
+    display: inline-block;
+    vertical-align: middle;
+}
