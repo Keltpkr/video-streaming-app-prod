@@ -4,9 +4,11 @@ module.exports = {
       name: "VideoStream(Dev)",
       script: "index.js",
       watch: true,
-      ignore_watch: ["node_modules", "logs"],
+      ignore_watch: ["node_modules", "logs","/home/kelt_/video-streaming-app-dev/public"],
       watch_options: {
-        followSymlinks: false,
+        usePolling: false,
+        interval: 5000,
+        followSymlinks: false
       },
     },
   ],
