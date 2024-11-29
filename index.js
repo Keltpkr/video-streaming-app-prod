@@ -159,6 +159,40 @@ app.get('/stream/:filename', (req, res) => {
     }
 });
 
+// Recherche récursive d'un fichier vidéo par nom (partiel ou complet)
+app.get('/search-and-play', (req, res) => {
+    const query = req.query.title || '';
+    if (!query) {
+        return res.status(400).json({ error: 'Le paramètre "title" est requis.' });
+    }
+
+    const findVideoFile = (dir, searchQuery) => {
+        const files = fs.readdirSync(dir);
+        for (const file of files) {
+            const filePath = path.join(dir, file);
+            const stat = fs.statSync(filePath);
+
+            if (stat.isDirectory()) {
+                const result = findVideoFile(filePath, searchQuery);
+                if (result) return result;
+            } else if (file.toLowerCase().includes(searchQuery.toLowerCase())) {
+                return path.relative(VIDEO_DIR, filePath);
+            }
+        }
+        return null;
+    };
+
+    const videoPath = findVideoFile(VIDEO_DIR, query);
+
+    if (videoPath) {
+        console.log(`[Info] Fichier trouvé : ${videoPath}`);
+        return res.json({ path: videoPath });
+    } else {
+        console.error(`[Erreur] Aucun fichier trouvé pour : ${query}`);
+        return res.status(404).json({ error: 'Fichier introuvable.' });
+    }
+});
+
 // Démarrer le serveur
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);

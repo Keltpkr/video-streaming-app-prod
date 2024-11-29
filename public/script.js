@@ -33,6 +33,7 @@ function getQueryParams() {
 
 // Initialisation des variables username et password
 const queryParams = getQueryParams();
+
 let username = queryParams.username || ''; // Récupérer le username depuis l'URL
 let password = queryParams.password || ''; // Récupérer le password depuis l'URL
 
@@ -94,7 +95,7 @@ function playVideo(path) {
     const source = videoPlayer.querySelector('source');
     source.src = `/stream/${encodeURIComponent(path)}?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
     videoPlayer.load(); // Charger la nouvelle vidéo
-    videoPlayer.play(); // Lancer la lecture
+    videoPlayer.play();
 }
 
 // Remonter dans l'arborescence
@@ -104,10 +105,33 @@ backButton.addEventListener('click', () => {
     loadFiles(parentPath);
 });
 
+// Fonction pour rechercher et lire une vidéo par son titre
+function searchAndPlay(title) {
+    console.log(`[Debug] Recherche du fichier contenant : ${title}`);
+    fetch(`/search-and-play?title=${encodeURIComponent(title)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Aucun fichier trouvé ou erreur serveur.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(`[Debug] Fichier trouvé : ${data.path}`);
+            playVideo(data.path); // Lire la vidéo automatiquement
+        })
+        .catch(err => {
+            console.error(`[Erreur] Recherche échouée :`, err);
+            alert('Impossible de trouver un fichier correspondant.');
+        });
+}
+
 // Charger la liste des fichiers au démarrage
 loadFiles();
 
 // Si les identifiants ne sont pas encore définis, affichez le formulaire
 if (!username || !password) {
     authModal.style.display = 'flex';
+}
+if (queryParams.title) {
+    searchAndPlay(queryParams.title);
 }
