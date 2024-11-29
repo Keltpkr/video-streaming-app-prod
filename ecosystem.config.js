@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "VideoStream Server",
+      name: "VideoStream(Dev)",
       script: "index.js",
       watch: true,
       ignore_watch: ["node_modules", "logs"],

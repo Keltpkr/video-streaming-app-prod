@@ -4,7 +4,6 @@ const backButton = document.getElementById('back-button');
 const authModal = document.getElementById('auth-modal');
 const authForm = document.getElementById('auth-form');
 
-// Variables pour stocker les identifiants utilisateur
 let currentPath = ''; // Chemin courant dans l'arborescence
 
 // Gestion de la soumission du formulaire d'authentification
@@ -12,6 +11,11 @@ authForm.addEventListener('submit', (e) => {
     e.preventDefault(); // Empêcher le rechargement de la page
     username = document.getElementById('username').value;
     password = document.getElementById('password').value;
+
+    // Mettre à jour l'URL du navigateur avec les identifiants
+    const newUrl = `${window.location.origin}${window.location.pathname}?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+    window.history.pushState({}, '', newUrl); // Met à jour l'URL sans recharger la page
+
     authModal.style.display = 'none'; // Masquer la fenêtre d'authentification
     loadFiles(); // Charger les fichiers après connexion
 });
