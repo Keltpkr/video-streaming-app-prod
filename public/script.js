@@ -4,7 +4,6 @@ const backButton = document.getElementById('back-button');
 const authModal = document.getElementById('auth-modal');
 const authForm = document.getElementById('auth-form');
 
-// Variables pour stocker les identifiants utilisateur
 let currentPath = ''; // Chemin courant dans l'arborescence
 
 // Gestion de la soumission du formulaire d'authentification
@@ -12,6 +11,11 @@ authForm.addEventListener('submit', (e) => {
     e.preventDefault(); // Empêcher le rechargement de la page
     username = document.getElementById('username').value;
     password = document.getElementById('password').value;
+
+    // Mettre à jour l'URL du navigateur avec les identifiants
+    const newUrl = `${window.location.origin}${window.location.pathname}?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+    window.history.pushState({}, '', newUrl); // Met à jour l'URL sans recharger la page
+
     authModal.style.display = 'none'; // Masquer la fenêtre d'authentification
     loadFiles(); // Charger les fichiers après connexion
 });
@@ -29,6 +33,7 @@ function getQueryParams() {
 
 // Initialisation des variables username et password
 const queryParams = getQueryParams();
+
 let username = queryParams.username || ''; // Récupérer le username depuis l'URL
 let password = queryParams.password || ''; // Récupérer le password depuis l'URL
 
@@ -90,7 +95,12 @@ function playVideo(path) {
     const source = videoPlayer.querySelector('source');
     source.src = `/stream/${encodeURIComponent(path)}?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
     videoPlayer.load(); // Charger la nouvelle vidéo
-    videoPlayer.play(); // Lancer la lecture
+    // Lancer la lecture après une interaction utilisateur
+    videoPlayer.addEventListener('canplay', () => {
+        videoPlayer.play().catch(error => {
+            console.error('[Erreur] Impossible de lire la vidéo :', error);
+        });
+    });
 }
 
 // Remonter dans l'arborescence
@@ -100,10 +110,58 @@ backButton.addEventListener('click', () => {
     loadFiles(parentPath);
 });
 
+// Fonction pour rechercher et lire une vidéo par son titre
+function searchAndPlay(title) {
+    console.log(`[Debug] Recherche du fichier contenant : ${title}`);
+    fetch(`/search-and-play?title=${encodeURIComponent(title)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Aucun fichier trouvé ou erreur serveur.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(`[Debug] Fichier trouvé : ${data.path}`);
+            playVideo(data.path); // Lire la vidéo automatiquement
+        })
+        .catch(err => {
+            console.error(`[Erreur] Recherche échouée :`, err);
+            alert('Impossible de trouver un fichier correspondant.');
+        });
+}
+
+// Fonction pour changer l'image de fond périodiquement
+function changeBackgroundWithFade() {
+    let counter = 1; // Compteur pour générer une nouvelle image
+    setInterval(() => {
+        // Mettre à jour l'image de fond avec une transition
+        document.body.style.backgroundImage = `url('https://picsum.photos/1920/1080?random=${counter}')`;
+        counter++;
+    }, 60000); // Changer toutes les 10 secondes
+}
+
+// Ajouter un écouteur global pour une interaction utilisateur
+document.body.addEventListener('click', () => {
+    const videoPlayer = document.getElementById('video-player');
+
+    // Vérifiez si la vidéo est prête à jouer
+    if (videoPlayer.paused) {
+        videoPlayer.play().catch(error => {
+            console.error('[Erreur] Impossible de lire la vidéo :', error);
+        });
+    }
+}, { once: true }); // Exécuter uniquement une fois
+
+// Appeler la fonction pour démarrer
+changeBackgroundWithFade();
+
 // Charger la liste des fichiers au démarrage
 loadFiles();
 
 // Si les identifiants ne sont pas encore définis, affichez le formulaire
 if (!username || !password) {
     authModal.style.display = 'flex';
+}
+if (queryParams.title) {
+    searchAndPlay(queryParams.title);
 }

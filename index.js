@@ -139,24 +139,58 @@ app.get('/stream/:filename', (req, res) => {
         const chunkSize = (end - start) + 1;
         const file = fs.createReadStream(videoPath, { start, end });
 
+        // **Ajoutez ce code ici** pour envoyer les en-têtes HTTP
         const head = {
-            'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+            'Content-Type': 'video/mp4',
             'Accept-Ranges': 'bytes',
             'Content-Length': chunkSize,
-            'Content-Type': 'video/mp4',
+            'Content-Range': `bytes ${start}-${end}/${fileSize}`
         };
-
         res.writeHead(206, head);
-        file.pipe(res);
+
+        file.pipe(res); // Envoyer les données vidéo en streaming
     } else {
         console.log(`[Info] Transfert complet : ${videoPath}`);
         const head = {
             'Content-Length': fileSize,
-            'Content-Type': 'video/mp4',
+            'Content-Type': 'video/mp4'
         };
-
         res.writeHead(200, head);
         fs.createReadStream(videoPath).pipe(res);
+    }
+});
+
+// Recherche récursive d'un fichier vidéo par nom (partiel ou complet)
+app.get('/search-and-play', (req, res) => {
+    const query = req.query.title || '';
+    if (!query) {
+        return res.status(400).json({ error: 'Le paramètre "title" est requis.' });
+    }
+
+    const findVideoFile = (dir, searchQuery) => {
+        const files = fs.readdirSync(dir);
+        for (const file of files) {
+            const filePath = path.join(dir, file);
+            const stat = fs.statSync(filePath);
+
+            if (stat.isDirectory()) {
+                const result = findVideoFile(filePath, searchQuery);
+                if (result) return result;
+            } else if (file.toLowerCase().includes(searchQuery.toLowerCase())) {
+                return path.relative(VIDEO_DIR, filePath);
+            }
+        }
+        return null;
+    };
+
+    const videoPath = findVideoFile(VIDEO_DIR, query);
+
+    if (videoPath) {
+        console.log(`[Info] Fichier trouvé : ${videoPath}`);
+        return res.json({ path: videoPath });
+    } else {
+        console.error(`[Erreur] Aucun fichier trouvé pour : ${query}`);
+        return res.status(404).json({ error: 'Fichier introuvable.' });
     }
 });
 
