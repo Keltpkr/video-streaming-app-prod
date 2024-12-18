@@ -17,6 +17,7 @@ exclude_patterns=(
     "./public/favicon.png"
     "./coverage"
     "./LICENSE"
+    "./users.json"
 )
 
 # Affiche le chemin du répertoire actuel pour débogage

@@ -8,3 +8,4 @@ pyvenv.cfg
 export4chatgpt.txt
 *.log
 .env
+users.json
