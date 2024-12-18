@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const PORT = process.env.PORT;
+const { execSync } = require('child_process');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -8,11 +8,44 @@ const CHUNK_SIZE = parseInt(process.env.CHUNK_SIZE || '10', 10) * 1024 * 1024; /
 
 const app = express();
 
-// Dossier des vidéos
+// Définir les configurations en fonction de l'environnement
+const isDev = process.env.NODE_ENV !== 'production';
+
+const IP = isDev ? process.env.DEV_IP : '0.0.0.0';
+const PORT = isDev ? process.env.DEV_PORT : process.env.PORT;
 const VIDEO_DIR = '/mnt/usbdrive/Films';
+
+// Fonction pour monter le partage réseau sans identifiant
+const mountNetworkShare = () => {
+    try {
+        console.log('[Info] Montage du partage réseau...');
+        execSync(`sudo mount -t cifs //192.168.1.46/USBDrive /mnt/usbdrive -o guest,uid=1000,gid=1000`);
+        console.log('[Info] Montage réussi.');
+    } catch (error) {
+        console.error(`[Erreur] Échec du montage : ${error.message}`);
+        process.exit(1);
+    }
+};
+
+// Fonction pour démonter le partage réseau
+const unmountNetworkShare = () => {
+    try {
+        console.log('[Info] Démontage du partage réseau...');
+        execSync('sudo umount /mnt/usbdrive');
+        console.log('[Info] Démontage réussi.');
+    } catch (error) {
+        console.error(`[Erreur] Échec du démontage : ${error.message}`);
+    }
+};
+
+// Monter le partage uniquement en développement
+if (isDev) {
+    mountNetworkShare();
+}
 
 // Chemin vers le fichier JSON des utilisateurs
 const USERS_FILE = path.join(__dirname, 'users.json');
+
 
 // Fonction pour charger les utilisateurs dynamiquement
 const loadUsers = () => {
@@ -63,6 +96,11 @@ app.use((req, res, next) => {
         console.log('[Info] Aucun identifiant fourni, formulaire d\'authentification nécessaire.');
         return res.status(401).sendFile(path.join(__dirname, 'public', 'index.html'));
     }
+});
+
+// Exemple de route pour tester
+app.get('/info', (req, res) => {
+    res.json({ IP, PORT, VIDEO_DIR });
 });
 
 // Route pour lister les fichiers et dossiers
@@ -195,7 +233,14 @@ app.get('/search-and-play', (req, res) => {
 });
 
 // Démarrer le serveur
-app.listen(PORT, () => {
-    console.log(`Serveur démarré sur http://localhost:${PORT}`);
+app.listen(PORT, IP, () => {
+    console.log(`Serveur démarré sur http://${IP}:${PORT}`);
 });
 
+// Assurer le démontage à l'arrêt de l'application en développement
+process.on('SIGINT', () => {
+    if (isDev) {
+        unmountNetworkShare();
+    }
+    process.exit();
+});
