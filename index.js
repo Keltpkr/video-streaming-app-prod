@@ -1,10 +1,12 @@
+require('dotenv').config();
+
+const PORT = process.env.PORT;
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const CHUNK_SIZE = parseInt(process.env.CHUNK_SIZE || '10', 10) * 1024 * 1024; // Par défaut : 10 Mo
 
 const app = express();
-const PORT = 8000;
 
 // Dossier des vidéos
 const VIDEO_DIR = '/mnt/usbdrive/Films';

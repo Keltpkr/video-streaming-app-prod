@@ -1,10 +1,10 @@
 module.exports = {
   apps: [
     {
-      name: "VideoStream Server",
+      name: "VideoStream(Prod)",
       script: "index.js",
       watch: true,
-      ignore_watch: ["node_modules", "logs"],
+      ignore_watch: ["node_modules", "logs", "public"],
       watch_options: {
         followSymlinks: false,
       },
