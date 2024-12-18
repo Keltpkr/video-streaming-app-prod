@@ -3,39 +3,63 @@
 html, body {
     margin: 0;
     padding: 0;
-    overflow-x: hidden; /* Cache le débordement horizontal */
+    overflow: hidden; /* Empêche le défilement */
+    height: 100%; /* S'assure que le conteneur prend toute la hauteur */
+    position: relative;
 }
 
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    height: 100vh;
-    background-image: url('https://picsum.photos/1920/1080?random=1');
-    background-size: 100%;
-    background-position: 30% 30%; /* Partir légèrement décalé du centre */
-    background-repeat: no-repeat;
-    animation: zoomFromOffset 60s infinite ease-in-out;
-    transition: background-image 10s linear; /* Transition pour le fondu */
+    height: 100%;
+    overflow: hidden;
+    background: black; /* Fond de base pour éviter les flashes */
 }
 
-/* Définition de l'animation de zoom */
-@keyframes zoomFromOffset {
+/* Conteneur pour les images de fond */
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://picsum.photos/1920/1080?random=1');
+    background-size: cover; /* Remplit le conteneur en conservant le ratio d'aspect, tronque si nécessaire */
+    display: block;    /* Évite les espaces indésirables sous l'image */
+    background-position: center;
+    background-repeat: no-repeat;
+    animation: zoomForward 60s infinite ease-in-out;
+    transition: opacity 1s ease-in-out; /* Transition douce pour le fondu */
+}
+
+/* L'image de fond active */
+.background.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+/* L'image de fond suivante */
+.background.inactive {
+    opacity: 0;
+    z-index: 0;
+}
+
+/* Animation de zoom uniquement vers l'avant */
+@keyframes zoomForward {
     0% {
-        background-size: 100%; /* Taille initiale */
-        background-position: 30% 30%; /* Départ légèrement décalé du centre */
-    }
-    50% {
-        background-size: 120%; /* Zoom maximal */
-        background-position: 40% 40%; /* Avancer légèrement dans le zoom */
+        /*background-size: 100% 100vh;  Taille initiale fixe */
+        transform: scale(1);
     }
     100% {
-        background-size: 100%; /* Retour à la taille initiale */
-        background-position: 30% 30%; /* Revenir à la position de départ */
+        /*background-size: 150% 150vh;  Zoom avant progressif */
+        transform: scale(1.5);
     }
 }
 
 .container {
+    position: relative;
+    z-index: 2; /* Au-dessus des images de fond */
     display: flex;
     flex-direction: column;
     height: 100vh;

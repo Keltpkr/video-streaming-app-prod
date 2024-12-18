@@ -20,6 +20,12 @@ exclude_patterns=(
     "./users.json"
 )
 
+# Filtre pour le mode "style"
+style_mode=false
+if [[ "$1" == "style" ]]; then
+    style_mode=true
+fi
+
 # Affiche le chemin du répertoire actuel pour débogage
 echo "Répertoire actuel : $(pwd)"
 
@@ -89,7 +95,14 @@ generate_exclude_list
 generate_structure
 
 # Parcours récursif des fichiers, en excluant ceux mentionnés dans exclude_files.tmp
-find . -type f | grep -v -F -f exclude_files.tmp | while read -r file; do
+find . -type f | grep -v -F -f exclude_files.tmp | \
+{
+    if $style_mode; then
+        grep -E '\.html$|\.css$|/script\.js$'
+    else
+        cat
+    fi
+} | while read -r file; do
     add_content "$file"
 done
 

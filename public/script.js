@@ -65,14 +65,14 @@ function loadFiles(path = '') {
                 const icon = document.createElement('span'); // Icône visuelle
 
                 if (file.isDirectory) {
-		        // Icône pour les dossiers
-		        icon.className = 'fas fa-folder'; // Icône de dossier
-		        icon.classList.add('folder', 'icon');
-		        li.addEventListener('click', () => loadFiles(file.path));
+                    // Icône pour les dossiers
+                    icon.className = 'fas fa-folder'; // Icône de dossier
+                    icon.classList.add('folder', 'icon');
+                    li.addEventListener('click', () => loadFiles(file.path));
                 } else {
-		        icon.className = 'fas fa-film'; // Icône de film
-		        icon.classList.add('video', 'icon');
-		        li.addEventListener('click', () => playVideo(file.path));
+                    icon.className = 'fas fa-film'; // Icône de film
+                    icon.classList.add('video', 'icon');
+                    li.addEventListener('click', () => playVideo(file.path));
                 }
 
                 li.appendChild(icon);
@@ -130,14 +130,47 @@ function searchAndPlay(title) {
         });
 }
 
-// Fonction pour changer l'image de fond périodiquement
+// Fonction pour changer l'image de fond périodiquement avec fondu et zoom vers une position aléatoire
 function changeBackgroundWithFade() {
-    let counter = 1; // Compteur pour générer une nouvelle image
+    let counter = 2; // Compteur pour générer une nouvelle image
+    const bg1 = document.getElementById('bg1');
+    const bg2 = document.getElementById('bg2');
+    let currentActive = bg1;
+    let currentInactive = bg2;
+    randomZoom();
+
     setInterval(() => {
-        // Mettre à jour l'image de fond avec une transition
-        document.body.style.backgroundImage = `url('https://picsum.photos/1920/1080?random=${counter}')`;
+
+
+        // Mettre à jour l'image et la position de la couche inactive
+        currentInactive.style.backgroundImage = `url('https://picsum.photos/1920/1080?random=${counter}')`;
         counter++;
-    }, 60000); // Changer toutes les 10 secondes
+
+        // Appliquer le fondu
+        currentActive.classList.remove('active');
+        currentActive.classList.add('inactive');
+        currentInactive.classList.remove('inactive');
+        currentInactive.classList.add('active');
+
+        // Inverser les rôles des couches
+        [currentActive, currentInactive] = [currentInactive, currentActive];
+
+        // Générer une nouvelle position de zoom vers aléatoire
+        randomZoom();
+    }, 60000); // Change l'image toutes les 60 secondes
+}
+
+function randomZoom() {
+    const background = document.getElementsByClassName('active')[0];
+
+    // Génère des valeurs aléatoires pour transform-origin
+    const randomX = Math.floor(Math.random() * 100); // Entre 0% et 100%
+    const randomY = Math.floor(Math.random() * 100); // Entre 0% et 100%
+
+    // Applique le transform avec des origines aléatoires
+    background.style.transformOrigin = `${randomX}% ${randomY}%`;
+    //background.style.transform = 'scale(1.1)';
+
 }
 
 // Ajouter un écouteur global pour une interaction utilisateur
