@@ -138,22 +138,22 @@ app.get('/stream/:filename', (req, res) => {
         const chunkSize = (end - start) + 1;
         const file = fs.createReadStream(videoPath, { start, end });
 
+        // **Ajoutez ce code ici** pour envoyer les en-têtes HTTP
         const head = {
-            'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+            'Content-Type': 'video/mp4',
             'Accept-Ranges': 'bytes',
             'Content-Length': chunkSize,
-            'Content-Type': 'video/mp4',
+            'Content-Range': `bytes ${start}-${end}/${fileSize}`
         };
-
         res.writeHead(206, head);
-        file.pipe(res);
+
+        file.pipe(res); // Envoyer les données vidéo en streaming
     } else {
         console.log(`[Info] Transfert complet : ${videoPath}`);
         const head = {
             'Content-Length': fileSize,
-            'Content-Type': 'video/mp4',
+            'Content-Type': 'video/mp4'
         };
-
         res.writeHead(200, head);
         fs.createReadStream(videoPath).pipe(res);
     }

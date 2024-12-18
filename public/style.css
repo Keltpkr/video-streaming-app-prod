@@ -10,11 +10,29 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    color: white; /* Texte en blanc pour contraster avec le fond */
+    height: 100vh;
     background-image: url('https://picsum.photos/1920/1080?random=1');
-    background-size: cover; /* Couvre tout l'écran */
-    background-position: center; /* Centrer l'image */
-    background-attachment: fixed; /* Reste fixe en défilant */
+    background-size: 100%;
+    background-position: 30% 30%; /* Partir légèrement décalé du centre */
+    background-repeat: no-repeat;
+    animation: zoomFromOffset 60s infinite ease-in-out;
+    transition: background-image 10s linear; /* Transition pour le fondu */
+}
+
+/* Définition de l'animation de zoom */
+@keyframes zoomFromOffset {
+    0% {
+        background-size: 100%; /* Taille initiale */
+        background-position: 30% 30%; /* Départ légèrement décalé du centre */
+    }
+    50% {
+        background-size: 120%; /* Zoom maximal */
+        background-position: 40% 40%; /* Avancer légèrement dans le zoom */
+    }
+    100% {
+        background-size: 100%; /* Retour à la taille initiale */
+        background-position: 30% 30%; /* Revenir à la position de départ */
+    }
 }
 
 .container {

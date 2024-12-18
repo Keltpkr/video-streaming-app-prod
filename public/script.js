@@ -95,7 +95,12 @@ function playVideo(path) {
     const source = videoPlayer.querySelector('source');
     source.src = `/stream/${encodeURIComponent(path)}?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
     videoPlayer.load(); // Charger la nouvelle vidéo
-    videoPlayer.play();
+    // Lancer la lecture après une interaction utilisateur
+    videoPlayer.addEventListener('canplay', () => {
+        videoPlayer.play().catch(error => {
+            console.error('[Erreur] Impossible de lire la vidéo :', error);
+        });
+    });
 }
 
 // Remonter dans l'arborescence
@@ -124,6 +129,31 @@ function searchAndPlay(title) {
             alert('Impossible de trouver un fichier correspondant.');
         });
 }
+
+// Fonction pour changer l'image de fond périodiquement
+function changeBackgroundWithFade() {
+    let counter = 1; // Compteur pour générer une nouvelle image
+    setInterval(() => {
+        // Mettre à jour l'image de fond avec une transition
+        document.body.style.backgroundImage = `url('https://picsum.photos/1920/1080?random=${counter}')`;
+        counter++;
+    }, 60000); // Changer toutes les 10 secondes
+}
+
+// Ajouter un écouteur global pour une interaction utilisateur
+document.body.addEventListener('click', () => {
+    const videoPlayer = document.getElementById('video-player');
+
+    // Vérifiez si la vidéo est prête à jouer
+    if (videoPlayer.paused) {
+        videoPlayer.play().catch(error => {
+            console.error('[Erreur] Impossible de lire la vidéo :', error);
+        });
+    }
+}, { once: true }); // Exécuter uniquement une fois
+
+// Appeler la fonction pour démarrer
+changeBackgroundWithFade();
 
 // Charger la liste des fichiers au démarrage
 loadFiles();
