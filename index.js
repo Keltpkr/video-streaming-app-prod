@@ -24,8 +24,13 @@ const mountNetworkShare = () => {
         console.log('[Info] Montage réussi.');
     } catch (error) {
         console.error(`[Erreur] Échec du montage : ${error.message}`);
+      try {
+        unmountNetworkShare();
+      } catch  (error){
+        console.error(`[Erreur] Échec du démontage : ${error.message}`);
+      }
         process.exit(1);
-    }
+    } 
 };
 
 // Fonction pour démonter le partage réseau
