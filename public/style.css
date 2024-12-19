@@ -3,39 +3,63 @@
 html, body {
     margin: 0;
     padding: 0;
-    overflow-x: hidden; /* Cache le débordement horizontal */
+    overflow: hidden; /* Empêche le défilement */
+    height: 100%; /* S'assure que le conteneur prend toute la hauteur */
+    position: relative;
 }
 
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    height: 100vh;
-    background-image: url('https://picsum.photos/1920/1080?random=1');
-    background-size: 100%;
-    background-position: 30% 30%; /* Partir légèrement décalé du centre */
-    background-repeat: no-repeat;
-    animation: zoomFromOffset 60s infinite ease-in-out;
-    transition: background-image 10s linear; /* Transition pour le fondu */
+    height: 100%;
+    overflow: hidden;
+    background: black; /* Fond de base pour éviter les flashes */
 }
 
-/* Définition de l'animation de zoom */
-@keyframes zoomFromOffset {
+/* Conteneur pour les images de fond */
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://picsum.photos/1920/1080?random=1');
+    background-size: cover; /* Remplit le conteneur en conservant le ratio d'aspect, tronque si nécessaire */
+    display: block;    /* Évite les espaces indésirables sous l'image */
+    background-position: center;
+    background-repeat: no-repeat;
+    animation: zoomForward 60s infinite ease-in-out;
+    transition: opacity 1s ease-in-out; /* Transition douce pour le fondu */
+}
+
+/* L'image de fond active */
+.background.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+/* L'image de fond suivante */
+.background.inactive {
+    opacity: 0;
+    z-index: 0;
+}
+
+/* Animation de zoom uniquement vers l'avant */
+@keyframes zoomForward {
     0% {
-        background-size: 100%; /* Taille initiale */
-        background-position: 30% 30%; /* Départ légèrement décalé du centre */
-    }
-    50% {
-        background-size: 120%; /* Zoom maximal */
-        background-position: 40% 40%; /* Avancer légèrement dans le zoom */
+        /*background-size: 100% 100vh;  Taille initiale fixe */
+        transform: scale(1);
     }
     100% {
-        background-size: 100%; /* Retour à la taille initiale */
-        background-position: 30% 30%; /* Revenir à la position de départ */
+        /*background-size: 150% 150vh;  Zoom avant progressif */
+        transform: scale(1.5);
     }
 }
 
 .container {
+    position: relative;
+    z-index: 2; /* Au-dessus des images de fond */
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -226,12 +250,16 @@ body {
     margin: 0 auto; /* Centre le conteneur horizontalement */
     max-width: 100%; /* Empêche le débordement horizontal */
     box-sizing: border-box; /* Inclut le padding dans la largeur totale */
+    height: 300px;
 }
 
 #file-list {
     list-style: none;
     padding: 0;
     margin: 0;
+    height: 100%;           /* Occupe toute la hauteur de son parent */
+    overflow-y: auto;       /* Assure le défilement */
+    overflow-x: hidden;       /* Assure le défilement */
 }
 
 #file-list li {
@@ -258,29 +286,54 @@ body {
     font-style: italic;
 }
 
-/* Style de la barre de défilement verticale */
-#file-browser::-webkit-scrollbar {
+/* Style de la barre de défilement verticale pour #file-list */
+#file-list::-webkit-scrollbar {
     width: 12px; /* Largeur de la barre de défilement */
     background-color: rgba(255, 255, 255, 0.1); /* Couleur de fond */
 }
 
-/* Style de la "piste" de la barre de défilement */
-#file-browser::-webkit-scrollbar-track {
+/* Style de la "piste" de la barre de défilement pour #file-list */
+#file-list::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.2); /* Couleur de la piste */
     border-radius: 10px; /* Coins arrondis */
 }
 
-/* Style du "curseur" de la barre de défilement */
-#file-browser::-webkit-scrollbar-thumb {
+/* Style du "curseur" de la barre de défilement pour #file-list */
+#file-list::-webkit-scrollbar-thumb {
     background: linear-gradient(45deg, #ff7e5f, #feb47b); /* Couleur en dégradé */
     border-radius: 10px; /* Coins arrondis */
     border: 2px solid rgba(0, 0, 0, 0.2); /* Bordure pour effet 3D */
 }
 
-/* Style au survol */
-#file-browser::-webkit-scrollbar-thumb:hover {
+/* Style au survol pour #file-list */
+#file-list::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(45deg, #feb47b, #ff7e5f); /* Inversion du dégradé */
     border: 2px solid rgba(0, 0, 0, 0.3); /* Renforcement de la bordure */
+}
+
+/* Style de la barre de défilement pour #file-browser */
+#file-browser::-webkit-scrollbar {
+    width: 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Style de la piste de la barre de défilement */
+#file-browser::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+/* Style du curseur de la barre de défilement */
+#file-browser::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #ff7e5f, #feb47b);
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+}
+
+/* Style du curseur au survol */
+#file-browser::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #feb47b, #ff7e5f);
+    border: 2px solid rgba(0, 0, 0, 0.3);
 }
 
 @media (max-width: 400px) {

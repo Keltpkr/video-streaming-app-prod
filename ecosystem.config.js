@@ -5,10 +5,10 @@ module.exports = {
         script: "index.js",
         env_production: {
           NODE_ENV: "production",
-          PORT: 8080,
+          PORT: 8000,
+          IP: "0.0.0.0",
           VIDEO_DIR: "/mnt/usbdrive/Films"
         }
       }
     ]
-  };
-  
+};
