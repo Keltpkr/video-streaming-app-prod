@@ -24,13 +24,9 @@ const mountNetworkShare = () => {
         console.log('[Info] Montage réussi.');
     } catch (error) {
         console.error(`[Erreur] Échec du montage : ${error.message}`);
-      try {
-        unmountNetworkShare();
-      } catch  (error){
-        console.error(`[Erreur] Échec du démontage : ${error.message}`);
-      }
-        process.exit(1);
-    } 
+        if (!error.message.includes('Device or resource busy'))
+            process.exit(1);
+    }
 };
 
 // Fonction pour démonter le partage réseau
@@ -146,7 +142,7 @@ app.get('/videos', (req, res) => {
         })
         .filter(item => item !== null);
 
-//    console.log(`[Info] Fichiers retournés : ${JSON.stringify(files)}`);
+    //    console.log(`[Info] Fichiers retournés : ${JSON.stringify(files)}`);
     res.json(files);
 });
 

@@ -1,5 +1,15 @@
 pm2 restart ecosystem.config.js --env production
 
+npm start en mode dévelopement !
+
+A faire :
+    - Conversion automatique des sous-titres.
+    - Corrections pour Ipad
+    - Ajout de copyright Gérald
+
+Git :
+    git pull origin main
+
 A faire :
     - Conversion automatique des sous-titres.
     - Corrections pour Ipad
