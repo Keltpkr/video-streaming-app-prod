@@ -1,10 +1,11 @@
 pm2 restart ecosystem.config.js --env production
 
+npm start en mode dévelopement !
+
 A faire :
     - Conversion automatique des sous-titres.
     - Corrections pour Ipad
     - Ajout de copyright Gérald
-    - Favicon icone film de font-awesomepm2 restart ecosystem.config.js --env production
 
 Git :
     git pull origin main

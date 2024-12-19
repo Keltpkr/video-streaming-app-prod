@@ -27,13 +27,6 @@ const mountNetworkShare = () => {
         if (!error.message.includes('Device or resource busy'))
             process.exit(1);
     }
-      try {
-        unmountNetworkShare();
-      } catch  (error){
-        console.error(`[Erreur] Échec du démontage : ${error.message}`);
-      }
-        process.exit(1);
-    } 
 };
 
 // Fonction pour démonter le partage réseau
