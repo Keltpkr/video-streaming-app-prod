@@ -250,12 +250,16 @@ body {
     margin: 0 auto; /* Centre le conteneur horizontalement */
     max-width: 100%; /* Empêche le débordement horizontal */
     box-sizing: border-box; /* Inclut le padding dans la largeur totale */
+    height: 300px;
 }
 
 #file-list {
     list-style: none;
     padding: 0;
     margin: 0;
+    height: 100%;           /* Occupe toute la hauteur de son parent */
+    overflow-y: auto;       /* Assure le défilement */
+    overflow-x: hidden;       /* Assure le défilement */
 }
 
 #file-list li {
@@ -282,29 +286,54 @@ body {
     font-style: italic;
 }
 
-/* Style de la barre de défilement verticale */
-#file-browser::-webkit-scrollbar {
+/* Style de la barre de défilement verticale pour #file-list */
+#file-list::-webkit-scrollbar {
     width: 12px; /* Largeur de la barre de défilement */
     background-color: rgba(255, 255, 255, 0.1); /* Couleur de fond */
 }
 
-/* Style de la "piste" de la barre de défilement */
-#file-browser::-webkit-scrollbar-track {
+/* Style de la "piste" de la barre de défilement pour #file-list */
+#file-list::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.2); /* Couleur de la piste */
     border-radius: 10px; /* Coins arrondis */
 }
 
-/* Style du "curseur" de la barre de défilement */
-#file-browser::-webkit-scrollbar-thumb {
+/* Style du "curseur" de la barre de défilement pour #file-list */
+#file-list::-webkit-scrollbar-thumb {
     background: linear-gradient(45deg, #ff7e5f, #feb47b); /* Couleur en dégradé */
     border-radius: 10px; /* Coins arrondis */
     border: 2px solid rgba(0, 0, 0, 0.2); /* Bordure pour effet 3D */
 }
 
-/* Style au survol */
-#file-browser::-webkit-scrollbar-thumb:hover {
+/* Style au survol pour #file-list */
+#file-list::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(45deg, #feb47b, #ff7e5f); /* Inversion du dégradé */
     border: 2px solid rgba(0, 0, 0, 0.3); /* Renforcement de la bordure */
+}
+
+/* Style de la barre de défilement pour #file-browser */
+#file-browser::-webkit-scrollbar {
+    width: 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Style de la piste de la barre de défilement */
+#file-browser::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+/* Style du curseur de la barre de défilement */
+#file-browser::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #ff7e5f, #feb47b);
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+}
+
+/* Style du curseur au survol */
+#file-browser::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #feb47b, #ff7e5f);
+    border: 2px solid rgba(0, 0, 0, 0.3);
 }
 
 @media (max-width: 400px) {

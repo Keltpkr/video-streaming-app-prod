@@ -5,6 +5,7 @@ const authModal = document.getElementById('auth-modal');
 const authForm = document.getElementById('auth-form');
 
 let currentPath = ''; // Chemin courant dans l'arborescence
+let scrollPositions = {}; // Pour stocker les positions de scroll par chemin
 
 // Gestion de la soumission du formulaire d'authentification
 authForm.addEventListener('submit', (e) => {
@@ -39,9 +40,6 @@ let password = queryParams.password || ''; // Récupérer le password depuis l'U
 
 // Charger les fichiers disponibles
 function loadFiles(path = '') {
-    console.log(`[Debug] Chargement des fichiers pour le chemin : ${path}`);
-    console.log(`[Debug] Utilisateur : ${username}, Mot de passe : ${password}`);
-
     fetch(`/videos?path=${encodeURIComponent(path)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
         .then(response => {
             if (!response.ok) {
@@ -50,10 +48,12 @@ function loadFiles(path = '') {
             return response.json();
         })
         .then(files => {
-            console.log(`[Debug] Fichiers reçus :`, files);
+            //console.log(`[Debug] Fichiers reçus :`, files);
 
             // Réinitialiser la liste des fichiers
-            fileList.innerHTML = '';
+            while (fileList.firstChild) {
+                fileList.removeChild(fileList.firstChild);
+            }
             currentPath = path;
 
             // Afficher ou masquer le bouton "Remonter"
@@ -68,7 +68,12 @@ function loadFiles(path = '') {
                     // Icône pour les dossiers
                     icon.className = 'fas fa-folder'; // Icône de dossier
                     icon.classList.add('folder', 'icon');
-                    li.addEventListener('click', () => loadFiles(file.path));
+                    li.addEventListener('click', () => {
+                        // Sauvegarder la position de scroll avant de changer de dossier
+                        scrollPositions[currentPath] = fileList.scrollTop;
+                        console.log(`[Debug] Position de scroll sauvegardée pour ${path} : ${fileList.scrollTop}`);
+                        loadFiles(file.path);
+                    });
                 } else {
                     icon.className = 'fas fa-film'; // Icône de film
                     icon.classList.add('video', 'icon');
@@ -79,6 +84,12 @@ function loadFiles(path = '') {
                 li.appendChild(document.createTextNode(file.name)); // Ajouter le nom du fichier/dossier
                 fileList.appendChild(li);
             });
+        })
+        .then(() => {
+            // Restaurer la position de scroll après que le DOM est mis à jour
+            const savedScroll = scrollPositions[path] || 0;
+            fileList.scrollTop = savedScroll;
+            console.log(`[Debug] Position de scroll restaurée pour ${path} : ${savedScroll}`);
         })
         .catch(err => {
             console.error(`[Erreur] Impossible de charger les fichiers :`, err);
@@ -105,6 +116,7 @@ function playVideo(path) {
 
 // Remonter dans l'arborescence
 backButton.addEventListener('click', () => {
+    console.log(`[Debug] Position de scroll : ${fileList.scrollTop}`);
     if (!currentPath) return; // Si on est déjà à la racine, ne rien faire
     const parentPath = currentPath.split('/').slice(0, -1).join('/');
     loadFiles(parentPath);
