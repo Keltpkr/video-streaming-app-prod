@@ -1,15 +1,14 @@
 module.exports = {
-  apps: [
-    {
-      name: "VideoStream(Dev)",
-      script: "index.js",
-      watch: true,
-      ignore_watch: ["node_modules", "logs","/home/kelt_/video-streaming-app-dev/public"],
-      watch_options: {
-        usePolling: false,
-        interval: 5000,
-        followSymlinks: false
-      },
-    },
-  ],
-};
+    apps: [
+      {
+        name: "video-streaming-app",
+        script: "index.js",
+        env_production: {
+          NODE_ENV: "production",
+          PORT: 8080,
+          VIDEO_DIR: "/mnt/usbdrive/Films"
+        }
+      }
+    ]
+  };
+  
