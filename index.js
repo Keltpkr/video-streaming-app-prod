@@ -8,18 +8,19 @@ const CHUNK_SIZE = parseInt(process.env.CHUNK_SIZE || '10', 10) * 1024 * 1024; /
 
 const app = express();
 
-// Définir les configurations en fonction de l'environnement
-const isDev = process.env.NODE_ENV !== 'production';
+const IP = process.env.IP || '0.0.0.0';
+const PORT = process.env.PORT || 8000;
 
-const IP = isDev ? process.env.DEV_IP : '0.0.0.0';
-const PORT = isDev ? process.env.DEV_PORT : process.env.PORT;
 const VIDEO_DIR = '/mnt/usbdrive/Films';
 
 // Fonction pour monter le partage réseau sans identifiant
 const mountNetworkShare = () => {
     try {
-        console.log('[Info] Montage du partage réseau...');
-        execSync(`sudo mount -t cifs //192.168.1.46/USBDrive /mnt/usbdrive -o guest,uid=1000,gid=1000`);
+        const videoDir = process.env.VIDEO_DIR || '//192.168.1.46/USBDrive';
+        const mountPoint = '/mnt/usbdrive';
+
+        console.log(`[Info] Montage du partage réseau depuis ${videoDir} vers ${mountPoint}...`);
+        execSync(`sudo mount -t cifs ${videoDir} ${mountPoint} -o guest,uid=1000,gid=1000`);
         console.log('[Info] Montage réussi.');
     } catch (error) {
         console.error(`[Erreur] Échec du montage : ${error.message}`);
@@ -39,7 +40,7 @@ const unmountNetworkShare = () => {
 };
 
 // Monter le partage uniquement en développement
-if (isDev) {
+if (process.env.NODE_ENV === 'development') {
     mountNetworkShare();
 }
 
@@ -239,8 +240,9 @@ app.listen(PORT, IP, () => {
 
 // Assurer le démontage à l'arrêt de l'application en développement
 process.on('SIGINT', () => {
-    if (isDev) {
+    if (process.env.NODE_ENV === 'development') {
         unmountNetworkShare();
     }
     process.exit();
 });
+
