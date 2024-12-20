@@ -3,9 +3,8 @@ pm2 restart ecosystem.config.js --env production
 npm start en mode dévelopement !
 
 A faire :
-    - Conversion automatique des sous-titres.
     - Corrections pour Ipad
-    - Ajout de copyright Gérald
+    - Bug quand pas de stockage pas possible de s'identifier il faudrait mieux un mesage disant aucuns films.
 
 Git :
     git pull origin main
