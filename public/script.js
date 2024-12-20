@@ -3,7 +3,6 @@ const fileList = document.getElementById('file-list');
 const backButton = document.getElementById('back-button');
 const authModal = document.getElementById('auth-modal');
 const authForm = document.getElementById('auth-form');
-const player = videojs('video-player');
 
 let currentPath = ''; // Chemin courant dans l'arborescence
 let scrollPositions = {}; // Pour stocker les positions de scroll par chemin
@@ -99,37 +98,6 @@ function loadFiles(path = '') {
         });
 }
 
-player.on('loadedmetadata', () => {
-    const audioTracks = player.audioTracks();
-    const selector = document.getElementById('audio-track-selector');
-    selector.innerHTML = ''; // Réinitialiser le sélecteur
-
-    for (let i = 0; i < audioTracks.length; i++) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = audioTracks[i].label || `Piste ${i + 1}`;
-        selector.appendChild(option);
-    }
-
-    selector.addEventListener('change', () => {
-        const selectedTrackIndex = selector.value;
-        for (let i = 0; i < audioTracks.length; i++) {
-            audioTracks[i].enabled = i == selectedTrackIndex;
-        }
-    });
-});
-
-function loadVideo(path) {
-    player.src({ type: 'video/mp4', src: `/stream/${encodeURIComponent(path)}` });
-    player.load();
-    player.on('loadedmetadata', () => {
-        const audioTracks = player.audioTracks();
-        console.log('[Info] Pistes audio disponibles :');
-        for (let i = 0; i < audioTracks.length; i++) {
-            console.log(`Piste ${i}: ${audioTracks[i].label || 'Sans nom'}`);
-        }
-    });
-}
 
 // Lire une vidéo
 function playVideo(path) {
