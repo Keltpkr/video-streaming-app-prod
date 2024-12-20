@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="style.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 	<link rel="icon" type="image/png" href="favicon.png">
+	<link href="https://vjs.zencdn.net/7.21.1/video-js.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -15,12 +16,10 @@
     <div class="background inactive" id="bg2"></div>
 	<div class="container">
 		<!-- Lecteur vidéo fixe -->
-		<video id="video-player" controls preload="auto">
+		<video id="video-player" class="video-js vjs-default-skin" controls preload="auto" width="640" height="360">
 			<source id="video-source" src="" type="video/mp4">
-			<track id="subtitle-track" kind="subtitles" srclang="fr" label="Sous-titres" default>
-			Votre navigateur ne supporte pas le lecteur vidéo.
 		</video>
-
+		<select id="audio-track-selector"></select>
 		<!-- Liste des fichiers avec scrolling -->
 		<div id="file-browser">
 			<span id="back-button" style="display: none; cursor: pointer;">
@@ -51,6 +50,7 @@
 			</div>
 		</form>
 	</div>
+	<script src="https://vjs.zencdn.net/7.21.1/video.js"></script>
 	<script src="script.js"></script>
 </body>
 
