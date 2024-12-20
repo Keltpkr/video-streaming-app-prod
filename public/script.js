@@ -133,6 +133,13 @@ function playVideo(path) {
             console.error(`[Erreur] Impossible de charger les sous-titres : ${err}`);
             subtitleTrack.src = '';
         });
+    
+    // Lancer la lecture après une interaction utilisateur
+    videoPlayer.addEventListener('canplay', () => {
+        videoPlayer.play().catch(error => {
+            console.error('[Erreur] Impossible de lire la vidéo :', error);
+        });
+    });
 }
 
 // Remonter dans l'arborescence
