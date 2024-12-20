@@ -103,15 +103,36 @@ function loadFiles(path = '') {
 function playVideo(path) {
     console.log(`[Debug] Lecture de la vidéo : ${path}`);
     const videoPlayer = document.getElementById('video-player');
-    const source = videoPlayer.querySelector('source');
-    source.src = `/stream/${encodeURIComponent(path)}?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
-    videoPlayer.load(); // Charger la nouvelle vidéo
-    // Lancer la lecture après une interaction utilisateur
-    videoPlayer.addEventListener('canplay', () => {
-        videoPlayer.play().catch(error => {
-            console.error('[Erreur] Impossible de lire la vidéo :', error);
+    const videoSource = document.getElementById('video-source');
+    const subtitleTrack = document.getElementById('subtitle-track');
+
+    if (!videoSource || !subtitleTrack) {
+        console.error('[Erreur] Élément video-source ou subtitle-track introuvable.');
+        return;
+    }
+
+    // Définir la source de la vidéo
+    videoSource.src = `/stream/${encodeURIComponent(path)}`;
+    videoPlayer.load();
+
+    // Charger automatiquement le fichier de sous-titres correspondant
+    const subtitlePath = path.replace(/\.[^.]+$/, '.vtt'); // Remplace l'extension par .vtt
+    console.log(`[Debug] Chemin des sous-titres : /subtitles/${subtitlePath}`);
+
+    fetch(`/subtitles/${encodeURIComponent(subtitlePath)}`)
+        .then(response => {
+            if (response.ok) {
+                subtitleTrack.src = `/subtitles/${encodeURIComponent(subtitlePath)}`;
+                console.log(`[Info] Sous-titres chargés : ${subtitlePath}`);
+            } else {
+                subtitleTrack.src = '';
+                console.log('[Info] Aucun sous-titre trouvé.');
+            }
+        })
+        .catch(err => {
+            console.error(`[Erreur] Impossible de charger les sous-titres : ${err}`);
+            subtitleTrack.src = '';
         });
-    });
 }
 
 // Remonter dans l'arborescence

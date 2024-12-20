@@ -15,12 +15,11 @@
     <div class="background inactive" id="bg2"></div>
 	<div class="container">
 		<!-- Lecteur vidéo fixe -->
-		<div id="video-player-container">
-			<video id="video-player" controls preload="auto">
-				<source src="" type="video/mp4">
-				Votre navigateur ne supporte pas le lecteur vidéo.
-			</video>
-		</div>
+		<video id="video-player" controls preload="auto">
+			<source id="video-source" src="" type="video/mp4">
+			<track id="subtitle-track" kind="subtitles" srclang="fr" label="Sous-titres" default>
+			Votre navigateur ne supporte pas le lecteur vidéo.
+		</video>
 
 		<!-- Liste des fichiers avec scrolling -->
 		<div id="file-browser">
